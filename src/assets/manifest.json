@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json.schemastore.org/web-manifest",
+	"background_color": "#b9c59e",
+	"categories": [ "food", "lifestyle" ],
+	"description": "En receptsammling med länkar och egenskrivna recept",
+	"dir": "ltr",
+	"display": "standalone",
+	"lang": "sv",
+	"name": "Kobkok",
+	"orientation": "any",
+	"scope": "https://kokbok.app/*/",
+	"short_name": "Kokbok",
+	"start_url": "https://kokbok.app/",
+	"theme_color": "#b9c59e"
+}

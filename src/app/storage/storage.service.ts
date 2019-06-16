@@ -28,7 +28,7 @@ export class StorageService {
 			{
 				storeAuthStateInCookie: true,
 				cacheLocation: "localStorage",
-				redirectUri: "http://127.0.0.1:4200/sign-in"
+				redirectUri: "https://kokbok.app/sign-in"
 			}
 		);
 
