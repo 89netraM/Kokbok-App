@@ -1,0 +1,26 @@
+@import "../../styles/colors.scss";
+@import "../../styles/fonts.scss";
+
+button {
+	padding: 10px;
+
+	color: $oneDriveWhite;
+	background-color: $oneDriveBlue;
+	font-family: $oneDriveFont;
+	font-size: 20px;
+	border: 1px $oneDriveBlue solid;
+	border-radius: 0px;
+
+	cursor: pointer;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	&:hover:not(:active) {
+		color: $oneDriveBlue;
+		background-color: $oneDriveWhite;
+		border: 1px $oneDriveBlue solid;
+	}
+}

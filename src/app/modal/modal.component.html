@@ -1,0 +1,12 @@
+<div>
+	<div class="top">
+		<h1 *ngIf="title">{{title}}</h1>
+	</div>
+	<div class="content">
+		<ng-content></ng-content>
+	</div>
+	<div class="bottom">
+		<button *ngIf="negative" (click)="hide(false);" class="cancel">{{negative}}</button>
+		<button *ngIf="positive" (click)="hide(true);" class="ok" [disabled]="!isAllValid()">{{positive}}</button>
+	</div>
+</div>

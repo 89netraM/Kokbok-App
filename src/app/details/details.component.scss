@@ -1,0 +1,129 @@
+@import "../../styles/colors.scss";
+
+:host {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+
+	progress {
+		width: 100%;
+		height: 5px;
+
+		margin: 0px;
+
+		color: $red;
+	}
+
+	article {
+		width: 100%;
+		min-height: calc(100vh - 53px);
+		padding: 50px 25px;
+		background-color: #f3f3f3;
+		position: relative;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+
+		@media screen and (min-width: 700px) {
+			width: 80%;
+			min-height: calc(100vh - 153px);
+			margin-top: 100px;
+			padding: 50px 100px;
+			border-top-left-radius: 50px;
+			border-top-right-radius: 50px;
+			box-shadow: 0px 0px 50px rgba(0,0,0,0.5);
+		}
+
+		::ng-deep img {
+			max-width: 100%;
+		}
+
+		button.edit {
+			width: 50px;
+			height: 50px;
+			margin: 0px;
+			padding: 0px;
+			cursor: pointer;
+			background: none;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url(../../icons/edit.png);
+			filter: invert(1.0);
+			border: none;
+			position: absolute;
+			top: 0px;
+			right: 0px;
+
+			&.noEdit {
+				background-image: url(../../icons/no-edit.png);
+				filter: invert(0.0);
+			}
+			
+			@media screen and (min-width: 700px) {
+				top: 25px;
+				right: 25px;
+			}
+		}
+
+		div[contenteditable="true"] {
+			outline: 2px $light solid;
+			margin-bottom: 25px;
+		}
+
+		aside {
+			height: 50px;
+			width: 100%;
+			background-color: #f3f3f3;
+			position: fixed;
+			left: 0px;
+			bottom: 0px;
+			display: none;
+			justify-content: center;
+			
+			@media screen and (min-width: 700px) {
+				width: 80%;
+				left: 10%;
+			}
+
+			button {
+				width: 50px;
+				height: 50px;
+				cursor: pointer;
+				background: none;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: 30px;
+				border: none;
+				color: #000000;
+				font-size: 30px;
+				margin-right: 10px;
+
+				&.header {
+					background-image: url("../../icons/header.png");
+				}
+				&.bold {
+					font-weight: bolder;
+				}
+				&.italic {
+					font-style: italic;
+				}
+				&.list {
+					background-image: url("../../icons/numbered-list.png");
+				}
+				&.bullets {
+					background-image: url("../../icons/bulleted-list.png");
+				}
+				&.image {
+					background-image: url("../../icons/picture.png");
+				}
+
+				&:last-child {
+					margin-right: 0px;
+				}
+			}
+		}
+		div[contenteditable="true"] ~ aside {
+			display: flex;
+		}
+	}
+}

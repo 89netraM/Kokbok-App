@@ -1,0 +1,44 @@
+<progress [style.visibility]="loading"></progress>
+<div>
+	<ng-container *ngFor="let item of items">
+		<ng-container *ngIf="item.type === 'url' then internal else external"></ng-container>
+		<ng-template #internal>
+			<a class="item" [href]="item.link" target="_blank">
+				<span>{{item.name}}</span>
+				<button (click)="$event.preventDefault(); edit(item);"></button>
+			</a>
+		</ng-template>
+		<ng-template #external>
+			<button class="item" [routerLink]="item.name">
+				<span>{{item.name}}</span>
+				<button (click)="$event.stopImmediatePropagation(); edit(item);"></button>
+			</button>
+		</ng-template>
+	</ng-container>
+	<a class="item new" (click)="addNew()"></a>
+</div>
+
+<bok-modal #addModal
+           title="Nytt recept"
+		   positive="Skapa"
+		   negative="Avbryt"
+		   (close)="addNewDone($event)">
+	<input type="text" placeholder="Namn" [(ngModel)]="addingName" modalRequired/>
+	Typ:
+	<label><input name="type" type="radio" value="doc" [value]="0" [(ngModel)]="addingType"/> Dokument</label>
+	<label><input name="type" type="radio" value="link" [value]="1" [(ngModel)]="addingType"/> Länk</label>
+	<!-- <label>
+		<input type="file" accept="image/*">
+		<button></button>
+	</label> -->
+	<input *ngIf="addingType === 1" type="url" placeholder="Länk" [(ngModel)]="addingURL" modalRequired/>
+</bok-modal>
+
+<bok-modal #editModal
+           [title]="_editingTitle"
+           positive="Spara"
+           negative="Avbryt"
+           (close)="editDone($event)">
+	<input type="text" placeholder="Namn" [(ngModel)]="_editingTitleBox">
+	<button class="delete" (click)="editDelete()">Ta bort</button>
+</bok-modal>

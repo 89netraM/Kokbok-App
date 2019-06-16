@@ -1,0 +1,65 @@
+@import "../styles/colors.scss";
+@import "../styles/fonts.scss";
+
+$navSize: 48px;
+$navFontSize: 30px;
+
+nav {
+	width: 100%;
+	height: $navSize;
+
+	background-color: $red;
+
+	display: flex;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 100;
+
+	button {
+		margin: 0px;
+		padding: 0px;
+
+		background: none;
+		background-position: center;
+		background-repeat: no-repeat;
+		border: none;
+
+		flex-grow: 0;
+		flex-basis: $navSize;
+
+		&.back {
+			background-image: url("../icons/back.png");
+		}
+		&.settings {
+			background-image: url("../icons/settings.png");
+		}
+	}
+
+	h1 {
+		margin: 0px;
+		padding: 0px 20px;
+
+		flex-grow: 1;
+		align-self: center;
+
+		font-family: $comicFont;
+		font-size: $navFontSize;
+		overflow: hidden;
+	}
+}
+
+main {
+	margin-top: $navSize;
+	min-height: calc(100vh - #{$navSize});
+	position: relative;
+
+	> ::ng-deep * {
+		width: 100%;
+		height: 100%;
+
+		margin: 0px;
+	}
+}

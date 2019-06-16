@@ -1,0 +1,25 @@
+<progress [style.visibility]="loading"></progress>
+
+<article>
+	<button class="edit" [class.noEdit]="isEditing" (click)="toggleEditing()" tool></button>
+	<div #article [contentEditable]="isEditing"></div>
+	<aside>
+		<button class="header" (click)="makeHeader()"></button>
+		<button class="bold" (click)="makeBold()">F</button>
+		<button class="italic" (click)="makeItalic()">K</button>
+		<button class="list" (click)="makeList()"></button>
+		<button class="bullets" (click)="makeBullets()"></button>
+		<button class="image" (click)="makeImage()"></button>
+	</aside>
+</article>
+
+<bok-modal #addImage
+           title="Lägg till bild"
+           positive="Lägg till"
+           negative="Avbryt"
+           (close)="addImageDone($event)">
+	<label>
+		<input type="file" accept="image/*" (change)="imageFileChange($event.target.files)" modalRequired/>
+		<div class="button" data-choose="Välj bild" data-change="Byt bild"></div>
+	</label>
+</bok-modal>

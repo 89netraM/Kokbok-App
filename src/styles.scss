@@ -1,1 +1,199 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "./styles/comic-neue.scss";
+@import "./styles/fonts.scss";
+@import "./styles/colors.scss";
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+	background-color: $light;
+	font-family: $font;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+h1 {
+	font-size: 2em;
+	font-weight: bolder;
+}
+h2 {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.item {
+	width: 152px;
+	height: 152px;
+	margin: 8px;
+	padding: 8px;
+	color: $white;
+	background-color: $dark;
+	border: none;
+	border-radius: 16px;
+	cursor: default;
+	font-family: $comicFont;
+	font-weight: bold;
+	font-size: 30px;
+	text-align: center;
+	text-decoration: none;
+	position: relative;
+	display: flex;
+	box-sizing: content-box;
+	justify-content: center;
+	align-items: center;
+
+	> button {
+		width: 32px;
+		height: 32px;
+		padding-top: 8px;
+		padding-right: 8px;
+		cursor: pointer;
+		background: none;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-image: url("./icons/edit.png");
+		border: none;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+
+	&.new {
+		cursor: pointer;
+		font-size: 50.66px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-image: url("./icons/new.png");
+		order: 9999;
+	}
+}
+
+//#region Inputs and Buttons
+input, label {
+	margin-bottom: 4px
+}
+
+//Inputs
+input[type=text], input[type=password], input[type=url] {
+	padding: 2px 4px;
+	border: 2px solid #7c7c7c;
+	border-radius: 2px
+}
+
+//Files
+label {
+	display: inline-block;
+
+	input[type=file] {
+		display: none;
+
+		& + .button::before {
+			content: attr(data-choose);
+		}
+
+		&:valid + .button::before {
+			content: attr(data-change);
+		}
+	}
+}
+
+//Checkboxes
+input[type=checkbox] {
+	display: none;
+
+	& + label span::before {
+		content: attr(data-off);
+	}
+
+	&:checked + label span::before {
+		content: attr(data-on);
+	}
+
+	&:checked + label.checkbox div {
+		background-color: #b9c59e;
+	}
+
+	&:checked + label.checkbox div::after {
+		width: 5px;
+		height: 10px;
+		content: "";
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		position: absolute;
+		top: 0px;
+		left: 4px;
+		transform: rotate(45deg);
+	}
+
+	&:checked + label.ball div {
+		background-color: #b9c59e;
+	}
+
+	&:checked + label.ball div::after {
+		left: 22px;
+	}
+}
+label.checkbox div {
+	width: 20px;
+	height: 20px;
+	margin-right: 4px;
+	border: 2px solid #7c7c7c;
+	border-radius: 2px;
+	position: relative;
+}
+label.ball div {
+	width: 40px;
+	height: 20px;
+	margin-right: 4px;
+	border: 2px solid #7c7c7c;
+	border-radius: 20px;
+	position: relative;
+	transition: background-color 0.3s;
+
+	&::after {
+		width: 12px;
+		height: 12px;
+		content: "";
+		border-radius: 100%;
+		background-color: #7c7c7c;
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		transition: left 0.3s;
+	}
+}
+
+//Buttons
+button, .button {
+	padding: 4px 8px;
+	cursor: pointer;
+	color: #f3f3f3;
+	background-color: #5b6753;
+	border: 2px solid #424b3c;
+	border-radius: 4px;
+	outline: none;
+
+	&:disabled {
+		cursor: not-allowed;
+		filter: grayscale(1.0);
+	}
+
+	&.cancel {
+		background-color: #5f5367;
+		border-color: #453c4b;
+	}
+	
+	&.ok {
+		background-color: #429eae;
+		border-color: #347c89;
+	}
+	
+	&.delete {
+		background-color: #ae5342;
+		border-color: #894134;
+	}
+}
+//#endregion

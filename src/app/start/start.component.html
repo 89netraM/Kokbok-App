@@ -1,0 +1,25 @@
+<progress [style.visibility]="loading"></progress>
+<div>
+	<button class="item" *ngFor="let category of categories" [routerLink]="'/recept/' + category.name">
+		<span>{{category.name}}</span>
+		<button (click)="$event.stopImmediatePropagation(); edit(category);"></button>
+	</button>
+	<a class="item new" (click)="addNew()"></a>
+</div>
+
+<bok-modal #addModal
+           title="Ny kategori"
+		   positive="Skapa"
+		   negative="Avbryt"
+		   (close)="addNewDone($event)">
+	<input type="text" placeholder="Namn" [(ngModel)]="addingName" modalRequired/>
+</bok-modal>
+
+<bok-modal #editModal
+           [title]="_editingTitle"
+           positive="Spara"
+           negative="Avbryt"
+           (close)="editDone($event)">
+	<input type="text" placeholder="Namn" [(ngModel)]="_editingTitleBox">
+	<button class="delete" (click)="editDelete()">Ta bort</button>
+</bok-modal>
