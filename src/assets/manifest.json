@@ -64,7 +64,7 @@
 	"lang": "sv",
 	"name": "Kobkok",
 	"orientation": "any",
-	"scope": "/*",
+	"scope": "/",
 	"screenshots": [
 		{
 			"src": "/screenshots/mobile_start.png",
