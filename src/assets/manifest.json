@@ -8,8 +8,20 @@
 	"icons": [
 		{
 			"purpose": "maskable",
+			"sizes": "512x512",
+			"src": "/logos/logo_512.png",
+			"type": "image/png"
+		},
+		{
+			"purpose": "maskable",
 			"sizes": "256x256",
 			"src": "/logos/logo_256.png",
+			"type": "image/png"
+		},
+		{
+			"purpose": "maskable",
+			"sizes": "192x192",
+			"src": "/logos/logo_192.png",
 			"type": "image/png"
 		},
 		{
