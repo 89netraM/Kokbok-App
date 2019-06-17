@@ -8,7 +8,25 @@
 	"lang": "sv",
 	"name": "Kobkok",
 	"orientation": "any",
-	"scope": "https://kokbok.app/*/",
+	"scope": "/*",
+	"screenshots": [
+		{
+			"src": "/screenshots/mobile_start.png",
+			"type": "image/png"
+		},
+		{
+			"src": "/screenshots/mobile_details.png",
+			"type": "image/png"
+		},
+		{
+			"src": "/screenshots/tablet_start.png",
+			"type": "image/png"
+		},
+		{
+			"src": "/screenshots/tablet_details.png",
+			"type": "image/png"
+		}
+	],
 	"short_name": "Kokbok",
 	"start_url": "https://kokbok.app/",
 	"theme_color": "#b9c59e"
