@@ -9,9 +9,9 @@
 
 <bok-modal #addModal
            title="Ny kategori"
-		   positive="Skapa"
-		   negative="Avbryt"
-		   (close)="addNewDone($event)">
+           positive="Skapa"
+           negative="Avbryt"
+           (close)="addNewDone($event)">
 	<input type="text" placeholder="Namn" [(ngModel)]="addingName" modalRequired/>
 </bok-modal>
 

@@ -128,7 +128,7 @@ export class DetailsComponent implements OnInit {
 				() => {
 					this.article.nativeElement.focus();
 					document.getSelection().setPosition(this.selectionNode, this.selectionOffset);
-					document.execCommand("insertImage", false, reader.result);
+					document.execCommand("insertImage", false, reader.result as string);
 				},
 				false
 			);

@@ -20,9 +20,9 @@
 
 <bok-modal #addModal
            title="Nytt recept"
-		   positive="Skapa"
-		   negative="Avbryt"
-		   (close)="addNewDone($event)">
+           positive="Skapa"
+           negative="Avbryt"
+           (close)="addNewDone($event)">
 	<input type="text" placeholder="Namn" [(ngModel)]="addingName" modalRequired/>
 	Typ:
 	<label><input name="type" type="radio" value="doc" [value]="0" [(ngModel)]="addingType"/> Dokument</label>

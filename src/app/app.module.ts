@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
+import { AppRoutingModule } from "./app-routing.module";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
@@ -35,39 +35,11 @@ import { RoutingStateService } from "./routing-state/routing-state.service";
 		BrowserModule,
 		HttpClientModule,
 		FormsModule,
-		RouterModule.forRoot([
-			{
-				path: "",
-				component: StartComponent,
-				canActivate: [IsSignedInGuard]
-			},
-			{
-				path: "sign-in",
-				component: SignInComponent,
-				canActivate: [IsSignedOutGuard]
-			},
-			{
-				path: "settings",
-				component: SettingsComponent,
-				canActivate: [IsSignedInGuard]
-			},
-			{
-				path: "recept/:category",
-				canActivate: [IsSignedInGuard],
-				children: [
-					{
-						path: "",
-						component: CategoryComponent
-					},
-					{
-						path: ":name",
-						component: DetailsComponent
-					}
-				]
-			}
-		]),
+		AppRoutingModule,
 		MsalModule.forRoot({
-			clientID: MsalConfig.appID
+			auth: {
+				clientId: MsalConfig.appID
+			}
 		})
 	],
 	providers: [
