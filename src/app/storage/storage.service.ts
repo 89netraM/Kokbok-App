@@ -19,6 +19,7 @@ export class StorageService {
 	private static get Items(): string { return StorageService.base + "/items"; }
 
 	private readonly msalAgent: any;
+	private token: Promise<string>;
 
 	public constructor(private http: HttpClient) {
 		this.msalAgent = new Msal.UserAgentApplication(
@@ -42,26 +43,27 @@ export class StorageService {
 	}
 
 	private async acquireToken(): Promise<string> {
-		try {
-			return await this.msalAgent.acquireTokenSilent(StorageService.Scopes);
-		}
-		catch (error) {
-			// if (error.indexOf("consent_required") !== -1 ||
-			// 	error.indexOf("interaction_required") !== -1 ||
-			// 	error.indexOf("login_required") !== -1) {
+		if (this.token == null) {
+			const fetchToken = async (): Promise<string> => {
 				try {
-					console.log("try");
-					return await this.msalAgent.acquireTokenPopup(StorageService.Scopes);
+					return await this.msalAgent.acquireTokenSilent(StorageService.Scopes);
 				}
-				catch {
-					console.log("failed", error);
-					throw new Error("Can't signin");
+				catch (error) {
+					try {
+						console.log("try", error);
+						return await this.msalAgent.acquireTokenPopup(StorageService.Scopes);
+					}
+					catch (error) {
+						console.log("failed", error);
+						throw new Error("Can't signin");
+					}
 				}
-			// }
-			// else {
-			// 	throw error;
-			// }
+			};
+
+			this.token = fetchToken();
 		}
+
+		return await this.token;
 	}
 
 	private async getOptions(): Promise<{ headers: { Authorization: string } }> {
