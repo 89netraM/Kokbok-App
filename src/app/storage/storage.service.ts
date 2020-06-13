@@ -237,11 +237,7 @@ export class StorageService {
 	public async updateDocument(item: Item, content: string): Promise<boolean> {
 		if (item.type === "md") {
 			try {
-				await this.http.put(
-					StorageService.Items + "/" + item.id + "/content",
-					content,
-					await this.getOptions()
-				).toPromise();
+				await this.uploadDocument(item.id, content);
 
 				return true;
 			}
@@ -251,6 +247,54 @@ export class StorageService {
 		}
 		else {
 			return false;
+		}
+	}
+
+	private uploadDocument(id: string, content: string): Promise<void> {
+		const uploadSmallDocument = async (id: string, content: string): Promise<void> => {
+			await this.http.put(
+				StorageService.Items + "/" + id + "/content",
+				content,
+				await this.getOptions()
+			).toPromise();
+		};
+		const uploadBigDocument = async (id: string, content: string): Promise<void> => {
+			const uploadPart = async (url: string, blob: Blob, index: number, total: number): Promise<void> => {
+				await this.http.put(
+					url,
+					await blob.text(),
+					{
+						headers: {
+							"Content-Range": `bytes ${index}-${Math.min(index + blob.size, total) - 1}/${total}`
+						}
+					}
+				).toPromise();
+			};
+
+			const response = await this.http.post(
+				StorageService.Items + "/" + id + "/createUploadSession",
+				{
+					"@microsoft.graph.conflictBehavior": "replace"
+				},
+				await this.getOptions()
+			).toPromise();
+			if (response != null && "uploadUrl" in response) {
+				const blob = new Blob([content]);
+				const partSize = 327680 * 20;
+				for (let i = 0; i < blob.size; i += partSize) {
+					await uploadPart(response["uploadUrl"], blob.slice(i, i + partSize), i, blob.size);
+				}
+			}
+			else {
+				throw new Error("Could not fetch upload URL.");
+			}
+		};
+
+		if (content.length < 4000000) {
+			return uploadSmallDocument(id, content);
+		}
+		else {
+			return uploadBigDocument(id, content);
 		}
 	}
 
