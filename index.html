@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Kokbok</title>
+		<base href="/">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
+		<script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.2.3/js/msal.js"></script>
+
+		<link rel="manifest" href="/manifest.json">
+		<meta name="theme-color" content="#ae5342">
+		<link rel="apple-touch-icon" href="/assets/logos/logo_192.png">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="msapplication-starturl" content="/">
+
+		<script>
+			if ("serviceWorker" in navigator) {
+				if (navigator.serviceWorker.controller) {
+					console.log("[PWA Builder] active service worker found, no need to register");
+				} else {
+					// Register the service worker
+					navigator.serviceWorker
+						.register("serviceWorker.js", {
+							scope: "./"
+						})
+						.then(function (reg) {
+							console.log("[PWA Builder] Service worker has been registered for scope: " + reg.scope);
+						});
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<bok-root>
+			<h1>Kokbok</h1>
+			<p>Var vänlig aktivera <code>JavaScript</code> för att använda appen.</p>
+		</bok-root>
+	<script src="runtime-es2015.js" type="module"></script><script src="runtime-es5.js" nomodule defer></script><script src="polyfills-es5.js" nomodule defer></script><script src="polyfills-es2015.js" type="module"></script><script src="styles-es2015.js" type="module"></script><script src="styles-es5.js" nomodule defer></script><script src="vendor-es2015.js" type="module"></script><script src="vendor-es5.js" nomodule defer></script><script src="main-es2015.js" type="module"></script><script src="main-es5.js" nomodule defer></script></body>
+</html>
