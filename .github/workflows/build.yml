@@ -20,6 +20,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Create 404 file
+        run: cp ./dist/kokbok/index.html ./dist/kokbok/404.html
+
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
