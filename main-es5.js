@@ -3886,28 +3886,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               while (1) {
                 switch (_context36.prev = _context36.next) {
                   case 0:
-                    _context36.t0 = this.http;
-                    _context36.t1 = item.link;
-                    _context36.next = 4;
-                    return this.acquireToken();
-
-                  case 4:
-                    _context36.t2 = _context36.sent;
-                    _context36.t3 = "Bearer " + _context36.t2;
-                    _context36.t4 = {
-                      "Authorization": _context36.t3
-                    };
-                    _context36.t5 = {
-                      headers: _context36.t4,
+                    _context36.next = 2;
+                    return this.http.get(item.link, {
                       responseType: "text"
-                    };
-                    _context36.next = 10;
-                    return _context36.t0.get.call(_context36.t0, _context36.t1, _context36.t5).toPromise();
+                    }).toPromise();
 
-                  case 10:
+                  case 2:
                     return _context36.abrupt("return", _context36.sent);
 
-                  case 11:
+                  case 3:
                   case "end":
                     return _context36.stop();
                 }

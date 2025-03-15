@@ -1635,9 +1635,6 @@ class StorageService {
     downloadItemText(item) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             return yield this.http.get(item.link, {
-                headers: {
-                    "Authorization": "Bearer " + (yield this.acquireToken()),
-                },
                 responseType: "text"
             }).toPromise();
         });
