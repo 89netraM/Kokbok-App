@@ -304,10 +304,6 @@ export class StorageService {
 		return await this.http.get<string>(
 			item.link,
 			{
-				headers: {
-					"Authorization": "Bearer " + await this.acquireToken(),
-					// "www-authenticate": "Bearer " + await this.acquireToken()
-				},
 				responseType: "text" as "json"
 			}
 		).toPromise<string>();
