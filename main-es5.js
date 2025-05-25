@@ -3394,6 +3394,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "createItem",
         value: function createItem(data) {
+          var _a;
+
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee23() {
             var item;
             return regeneratorRuntime.wrap(function _callee23$(_context23) {
@@ -3407,12 +3409,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     item = _context23.sent;
 
                     if (!(item != null)) {
-                      _context23.next = 8;
+                      _context23.next = 17;
                       break;
                     }
 
-                    if (!(item.type === "url")) {
-                      _context23.next = 8;
+                    if (!(item.type === "url" || item.type === "txt")) {
+                      _context23.next = 17;
                       break;
                     }
 
@@ -3420,12 +3422,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return this.downloadLink(item);
 
                   case 7:
-                    item = _context23.sent;
+                    _context23.t1 = _a = _context23.sent;
+                    _context23.t0 = _context23.t1 !== null;
 
-                  case 8:
+                    if (!_context23.t0) {
+                      _context23.next = 11;
+                      break;
+                    }
+
+                    _context23.t0 = _a !== void 0;
+
+                  case 11:
+                    if (!_context23.t0) {
+                      _context23.next = 15;
+                      break;
+                    }
+
+                    _context23.t2 = _a;
+                    _context23.next = 16;
+                    break;
+
+                  case 15:
+                    _context23.t2 = item;
+
+                  case 16:
+                    item = _context23.t2;
+
+                  case 17:
                     return _context23.abrupt("return", item);
 
-                  case 9:
+                  case 18:
                   case "end":
                     return _context23.stop();
                 }
@@ -3917,9 +3943,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 2:
                     linkText = _context37.sent;
                     linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2");
+
+                    if (linkText.match(/^https?:\/\//)) {
+                      _context37.next = 6;
+                      break;
+                    }
+
+                    return _context37.abrupt("return", null);
+
+                  case 6:
                     return _context37.abrupt("return", new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + "." + item.type, linkText));
 
-                  case 5:
+                  case 7:
                   case "end":
                     return _context37.stop();
                 }

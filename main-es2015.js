@@ -1499,11 +1499,12 @@ class StorageService {
         });
     }
     createItem(data) {
+        var _a;
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             let item = yield _item__WEBPACK_IMPORTED_MODULE_3__["Item"].ExtractFromData(data);
             if (item != null) {
-                if (item.type === "url") {
-                    item = yield this.downloadLink(item);
+                if (item.type === "url" || item.type === "txt") {
+                    item = (_a = yield this.downloadLink(item)) !== null && _a !== void 0 ? _a : item;
                 }
             }
             return item;
@@ -1643,6 +1644,9 @@ class StorageService {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             let linkText = yield this.downloadItemText(item);
             linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2");
+            if (!linkText.match(/^https?:\/\//)) {
+                return null;
+            }
             return new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + "." + item.type, linkText);
         });
     }
