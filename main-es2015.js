@@ -1643,7 +1643,7 @@ class StorageService {
     downloadLink(item) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             let linkText = yield this.downloadItemText(item);
-            linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2");
+            linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2").trim();
             if (!linkText.match(/^https?:\/\//)) {
                 return null;
             }

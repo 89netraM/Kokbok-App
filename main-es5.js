@@ -3942,7 +3942,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 2:
                     linkText = _context37.sent;
-                    linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2");
+                    linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2").trim();
 
                     if (linkText.match(/^https?:\/\//)) {
                       _context37.next = 6;
