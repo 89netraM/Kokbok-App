@@ -3952,7 +3952,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return _context37.abrupt("return", null);
 
                   case 6:
-                    return _context37.abrupt("return", new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + "." + item.type, linkText));
+                    return _context37.abrupt("return", new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + ".url", linkText));
 
                   case 7:
                   case "end":

@@ -1647,7 +1647,7 @@ class StorageService {
             if (!linkText.match(/^https?:\/\//)) {
                 return null;
             }
-            return new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + "." + item.type, linkText);
+            return new _item__WEBPACK_IMPORTED_MODULE_3__["Item"](item.id, item.created.toISOString(), item.name + ".url", linkText);
         });
     }
 }
