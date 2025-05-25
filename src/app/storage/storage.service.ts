@@ -138,8 +138,8 @@ export class StorageService {
 	private async createItem(data: ResponseItem) {
 		let item: Item = await Item.ExtractFromData(data);
 		if (item != null) {
-			if (item.type === "url") {
-				item = await this.downloadLink(item);
+			if (item.type === "url" || item.type === "txt") {
+				item = await this.downloadLink(item) ?? item;
 			}
 		}
 
@@ -311,8 +311,12 @@ export class StorageService {
 	private async downloadLink(item: Item): Promise<Item> {
 		let linkText: string = await this.downloadItemText(item);
 
-		linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2");
+		linkText = linkText.replace(/(.|\n|\r)*?URL=(.*)(.|\n|\r)*/ig, "$2").trim();
 
-		return new Item(item.id, item.created.toISOString(), item.name + "." + item.type, linkText);
+		if (!linkText.match(/^https?:\/\//)) {
+			return null;
+		}
+
+		return new Item(item.id, item.created.toISOString(), item.name + ".url", linkText);
 	}
 }
