@@ -715,8 +715,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 3:
                     this.items = _context.sent;
+                    console.log(this.items);
 
-                  case 4:
+                  case 5:
                   case "end":
                     return _context.stop();
                 }
