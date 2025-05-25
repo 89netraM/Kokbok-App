@@ -369,7 +369,6 @@ class CategoryComponent {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             this.category = this.route.snapshot.params["category"];
             this.items = yield this.storage.getItems(this.category);
-            console.log(this.items);
         });
     }
     edit(item) {
