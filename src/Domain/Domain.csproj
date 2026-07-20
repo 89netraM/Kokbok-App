@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Kokbok.Domain</RootNamespace>
+    <AssemblyName>Kokbok.Domain</AssemblyName>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Aspire.AppHost.Sdk" />
+  <PropertyGroup>
+    <RootNamespace>Kokbok.AppHost</RootNamespace>
+    <AssemblyName>Kokbok.AppHost</AssemblyName>
+    <UserSecretsId>0f16b84a-314a-4627-a2f0-1f67f1ac4820</UserSecretsId>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Api\Api.csproj" />
+  </ItemGroup>
+</Project>

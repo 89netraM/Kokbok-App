@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>Kokbok.Api</RootNamespace>
+    <AssemblyName>Kokbok.Api</AssemblyName>
+    <UserSecretsId>bacb0641-8829-4e02-ba78-8f02902b2e48</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+  </ItemGroup>
+</Project>

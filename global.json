@@ -1,0 +1,12 @@
+{
+  "sdk": {
+    "version": "11.0.100-preview.6.26359.118",
+    "allowPrerelease": true
+  },
+  "msbuild-sdks": {
+    "Aspire.AppHost.Sdk": "13.4.6"
+  },
+  "test": {
+    "runner": "Microsoft.Testing.Platform"
+  }
+}
