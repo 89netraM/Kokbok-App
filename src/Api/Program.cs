@@ -76,12 +76,11 @@ app.MapGet(
         );
         if (!result.Succeeded)
         {
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             var user = new User
             {
                 Name = info.Principal.FindFirstValue(ClaimTypes.Name),
-                UserName = email,
-                Email = email,
+                UserName = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier),
+                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
             };
             await userManager.CreateAsync(user);
             await userManager.AddLoginAsync(user, info);
