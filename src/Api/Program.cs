@@ -5,10 +5,6 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,12 +38,7 @@ app.MapOpenApi();
 
 app.MapAuthEndpoints();
 
-app.MapGet("/public", () => "Hello World!");
-app.MapGet(
-        "/private",
-        async ([FromServices] UserManager<User> userManager, HttpContext httpContext) =>
-            $"Hello {(await userManager.GetUserAsync(httpContext.User))?.Name}!"
-    )
-    .RequireAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.Run();

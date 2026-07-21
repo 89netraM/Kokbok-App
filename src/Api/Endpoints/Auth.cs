@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Kokbok.Api.Models;
@@ -22,6 +23,9 @@ public static class Auth
         {
             var group = builder.MapGroup("auth");
 
+            group.MapPost("login", Login);
+            group.MapPost("register", Register);
+
             group.MapGet("facebook/signin", ExternalChallenge(FacebookDefaults.AuthenticationScheme));
             group.MapGet("google/signin", ExternalChallenge(GoogleDefaults.AuthenticationScheme));
             group.MapGet("microsoft/signin", ExternalChallenge(MicrosoftAccountDefaults.AuthenticationScheme));
@@ -29,6 +33,43 @@ public static class Auth
 
             return group;
         }
+    }
+
+    private static async Task<Results<Ok, UnauthorizedHttpResult>> Login(
+        [FromServices] SignInManager<User> signInManager,
+        [FromBody] LoginRequest request
+    )
+    {
+        var result = await signInManager.PasswordSignInAsync(
+            request.Username,
+            request.Password,
+            isPersistent: true,
+            lockoutOnFailure: false
+        );
+        return result.Succeeded ? TypedResults.Ok() : TypedResults.Unauthorized();
+    }
+
+    private static async Task<Results<Ok, ValidationProblem>> Register(
+        [FromServices] SignInManager<User> signInManager,
+        [FromServices] UserManager<User> userManager,
+        [FromBody] RegisterRequest request
+    )
+    {
+        var user = new User
+        {
+            UserName = request.Username,
+            Name = request.Name,
+            Email = request.Email,
+        };
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            return TypedResults.ValidationProblem(
+                result.Errors.GroupBy(e => e.Code, e => e.Description).ToDictionary(e => e.Key, e => e.ToArray())
+            );
+        }
+        await signInManager.SignInAsync(user, isPersistent: true);
+        return TypedResults.Ok();
     }
 
     private static Func<SignInManager<User>, ChallengeHttpResult> ExternalChallenge(string authenticationScheme) =>
@@ -46,7 +87,7 @@ public static class Auth
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            return TypedResults.Redirect("/login?error=external");
+            return TypedResults.Redirect("/join?error=external");
         }
 
         var result = await signInManager.ExternalLoginSignInAsync(
@@ -67,6 +108,20 @@ public static class Auth
             await signInManager.SignInAsync(user, isPersistent: true);
         }
 
-        return TypedResults.Redirect("/private");
+        return TypedResults.Redirect("/");
     }
+}
+
+public sealed class LoginRequest
+{
+    public required string Username { get; init; }
+    public required string Password { get; init; }
+}
+
+public sealed class RegisterRequest
+{
+    public required string Username { get; init; }
+    public required string Email { get; init; }
+    public required string Name { get; init; }
+    public required string Password { get; init; }
 }

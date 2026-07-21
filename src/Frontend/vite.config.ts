@@ -3,6 +3,13 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  server: {
+    proxy: {
+      "/auth": {
+        target: "https://localhost:5164",
+      },
+    },
+  },
   plugins: [
     sveltekit({
       compilerOptions: {
@@ -16,6 +23,15 @@ export default defineConfig({
         precompress: false,
         strict: true,
       }),
+      prerender: {
+        handleHttpError: ({ path, message }) => {
+          if (path.startsWith("/auth")) {
+            return;
+          }
+
+          throw new Error(message);
+        },
+      },
     }),
   ],
 });
