@@ -4,6 +4,7 @@ using Kokbok.Api.Database;
 using Kokbok.Api.Models;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -47,6 +48,17 @@ builder
             ?? throw new ArgumentNullException("Auth:Google:ClientSecret");
         options.CallbackPath = "/auth/google/redirect";
         options.SignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId =
+            builder.Configuration["Auth:Microsoft:ClientId"]
+            ?? throw new ArgumentNullException("Auth:Microsoft:ClientId");
+        options.ClientSecret =
+            builder.Configuration["Auth:Microsoft:ClientSecret"]
+            ?? throw new ArgumentNullException("Auth:Microsoft:ClientSecret");
+        options.CallbackPath = "/auth/microsoft/redirect";
+        options.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
 builder.Services.AddAuthorization();
@@ -79,6 +91,17 @@ app.MapGet(
                 "/auth/callback"
             ),
             [FacebookDefaults.AuthenticationScheme]
+        )
+);
+app.MapGet(
+    "/auth/microsoft/signin",
+    ([FromServices] SignInManager<User> signInManager) =>
+        TypedResults.Challenge(
+            signInManager.ConfigureExternalAuthenticationProperties(
+                MicrosoftAccountDefaults.AuthenticationScheme,
+                "/auth/callback"
+            ),
+            [MicrosoftAccountDefaults.AuthenticationScheme]
         )
 );
 

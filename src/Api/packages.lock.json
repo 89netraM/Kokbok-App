@@ -20,6 +20,12 @@
         "resolved": "11.0.0-preview.6.26359.118",
         "contentHash": "/d5MkVNthkesgjCx2H0wfz0cmpdO15K13ebK8aZmRveDjC3zXM44Pgs9hxwnCFXxz6sJ06/RpSZUcIBchhPNeQ=="
       },
+      "Microsoft.AspNetCore.Authentication.MicrosoftAccount": {
+        "type": "Direct",
+        "requested": "[11.0.0-preview.6.26359.118, )",
+        "resolved": "11.0.0-preview.6.26359.118",
+        "contentHash": "W//tb01iMrhLX8QEg8HFCnsZWKoqURehTtFbatJKedDH4Ey5JUUwc9YVdmVkfaRBAL5mK2HDjYkAvZz4GTbGmA=="
+      },
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
         "type": "Direct",
         "requested": "[11.0.0-preview.6.26359.118, )",
