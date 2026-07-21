@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using Kokbok.Api.Database;
 using Kokbok.Api.Models;
@@ -26,47 +25,17 @@ builder
 
 builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<UserDbContext>();
 
+builder.Services.AddAuthentication().AddFacebook().AddGoogle().AddMicrosoftAccount();
+builder.Services.AddOptions<FacebookOptions>(FacebookDefaults.AuthenticationScheme).BindConfiguration("Auth:Facebook");
+builder.Services.AddOptions<GoogleOptions>(GoogleDefaults.AuthenticationScheme).BindConfiguration("Auth:Google");
 builder
-    .Services.AddAuthentication()
-    .AddFacebook(options =>
-    {
-        options.ClientId =
-            builder.Configuration["Auth:Facebook:ClientId"]
-            ?? throw new ArgumentNullException("Auth:Facebook:ClientId");
-        options.ClientSecret =
-            builder.Configuration["Auth:Facebook:ClientSecret"]
-            ?? throw new ArgumentNullException("Auth:Facebook:ClientSecret");
-        options.CallbackPath = "/auth/facebook/redirect";
-        options.SignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddGoogle(options =>
-    {
-        options.ClientId =
-            builder.Configuration["Auth:Google:ClientId"] ?? throw new ArgumentNullException("Auth:Google:ClientId");
-        options.ClientSecret =
-            builder.Configuration["Auth:Google:ClientSecret"]
-            ?? throw new ArgumentNullException("Auth:Google:ClientSecret");
-        options.CallbackPath = "/auth/google/redirect";
-        options.SignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddMicrosoftAccount(options =>
-    {
-        options.ClientId =
-            builder.Configuration["Auth:Microsoft:ClientId"]
-            ?? throw new ArgumentNullException("Auth:Microsoft:ClientId");
-        options.ClientSecret =
-            builder.Configuration["Auth:Microsoft:ClientSecret"]
-            ?? throw new ArgumentNullException("Auth:Microsoft:ClientSecret");
-        options.CallbackPath = "/auth/microsoft/redirect";
-        options.SignInScheme = IdentityConstants.ExternalScheme;
-    });
-
+    .Services.AddOptions<MicrosoftAccountOptions>(MicrosoftAccountDefaults.AuthenticationScheme)
+    .BindConfiguration("Auth:Microsoft");
 builder.Services.AddAuthorization();
 
 using var app = builder.Build();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapOpenApi();
