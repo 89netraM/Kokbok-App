@@ -2,6 +2,7 @@ using System;
 using System.Security.Claims;
 using Kokbok.Api.Database;
 using Kokbok.Api.Models;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,17 @@ builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<UserDb
 
 builder
     .Services.AddAuthentication()
+    .AddFacebook(options =>
+    {
+        options.ClientId =
+            builder.Configuration["Auth:Facebook:ClientId"]
+            ?? throw new ArgumentNullException("Auth:Facebook:ClientId");
+        options.ClientSecret =
+            builder.Configuration["Auth:Facebook:ClientSecret"]
+            ?? throw new ArgumentNullException("Auth:Facebook:ClientSecret");
+        options.CallbackPath = "/auth/facebook/redirect";
+        options.SignInScheme = IdentityConstants.ExternalScheme;
+    })
     .AddGoogle(options =>
     {
         options.ClientId =
@@ -56,6 +68,17 @@ app.MapGet(
                 "/auth/callback"
             ),
             [GoogleDefaults.AuthenticationScheme]
+        )
+);
+app.MapGet(
+    "/auth/facebook/signin",
+    ([FromServices] SignInManager<User> signInManager) =>
+        TypedResults.Challenge(
+            signInManager.ConfigureExternalAuthenticationProperties(
+                FacebookDefaults.AuthenticationScheme,
+                "/auth/callback"
+            ),
+            [FacebookDefaults.AuthenticationScheme]
         )
 );
 

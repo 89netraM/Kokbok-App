@@ -8,6 +8,12 @@
         "resolved": "1.3.0",
         "contentHash": "jzzLpmz7F6LyBh5FTZy8/4dEYVcAG9VjBPKryZ82LIoUuupcBkCSXzaeS/4oYcp/rBC8yVLcDstJ8CIv9n2IFw=="
       },
+      "Microsoft.AspNetCore.Authentication.Facebook": {
+        "type": "Direct",
+        "requested": "[11.0.0-preview.6.26359.118, )",
+        "resolved": "11.0.0-preview.6.26359.118",
+        "contentHash": "fyIbVKsy6T0OxfHY4nXJ4+Ji+Ai/+oUAvynXe8s2iRnrOyw+AyklWGPBPQNqMVx2s5dqRkuipwOv/t8D9tOLhg=="
+      },
       "Microsoft.AspNetCore.Authentication.Google": {
         "type": "Direct",
         "requested": "[11.0.0-preview.6.26359.118, )",
