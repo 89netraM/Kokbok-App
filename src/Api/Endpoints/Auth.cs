@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Kokbok.Api.Models;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
@@ -36,7 +35,7 @@ public static class Auth
     }
 
     private static async Task<Results<Ok, UnauthorizedHttpResult>> Login(
-        [FromServices] SignInManager<User> signInManager,
+        [FromServices] SignInManager<Models.User> signInManager,
         [FromBody] LoginRequest request
     )
     {
@@ -72,7 +71,9 @@ public static class Auth
         return TypedResults.Ok();
     }
 
-    private static Func<SignInManager<User>, ChallengeHttpResult> ExternalChallenge(string authenticationScheme) =>
+    private static Func<SignInManager<Models.User>, ChallengeHttpResult> ExternalChallenge(
+        string authenticationScheme
+    ) =>
         ([FromServices] signInManager) =>
             TypedResults.Challenge(
                 signInManager.ConfigureExternalAuthenticationProperties(authenticationScheme, "/auth/callback"),

@@ -35,6 +35,8 @@ builder.Services.AddAuthorization();
 builder.Services.TryAddSingleton(TimeProvider.System);
 builder.Services.AddTransient<RecipeService>();
 
+builder.Services.AddAssetServiceOptions().AddTransient<AssetService>();
+
 using var app = builder.Build();
 
 app.UseAuthentication();
@@ -43,6 +45,7 @@ app.UseAuthorization();
 var api = app.MapGroup("api");
 api.MapOpenApi();
 api.MapRecipeEndpoints();
+api.MapAssetEndpoints();
 
 app.MapAuthEndpoints();
 
