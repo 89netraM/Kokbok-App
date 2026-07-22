@@ -13,7 +13,7 @@ public sealed class MigrationsService(IServiceProvider serviceProvider) : IHoste
     {
         using var scope = serviceProvider.CreateScope();
 
-        var userDbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+        var userDbContext = scope.ServiceProvider.GetRequiredService<KokbokDbContext>();
         await userDbContext.Database.MigrateAsync(cancellationToken);
     }
 

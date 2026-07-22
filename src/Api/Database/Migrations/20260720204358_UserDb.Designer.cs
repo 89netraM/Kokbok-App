@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kokbok.Api.Database.Migrations;
 
-[DbContext(typeof(UserDbContext))]
+[DbContext(typeof(KokbokDbContext))]
 [Migration("20260720204358_UserDb")]
 partial class _20260720204358_UserDb
 {

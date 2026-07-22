@@ -14,12 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder
-    .Services.AddDbContext<UserDbContext>(
-        (sp, options) => options.UseSqlite(sp.GetRequiredService<IConfiguration>().GetConnectionString("UserDatabase"))
+    .Services.AddDbContext<KokbokDbContext>(
+        (sp, options) =>
+            options.UseSqlite(sp.GetRequiredService<IConfiguration>().GetConnectionString("KokbokDatabase"))
     )
     .AddMigrationsService();
 
-builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<KokbokDbContext>();
 
 builder.Services.AddAuthentication().AddFacebook().AddGoogle().AddMicrosoftAccount();
 builder.Services.AddOptions<FacebookOptions>(FacebookDefaults.AuthenticationScheme).BindConfiguration("Auth:Facebook");

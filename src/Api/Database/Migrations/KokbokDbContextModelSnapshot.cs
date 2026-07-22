@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kokbok.Api.Database.Migrations;
 
-[DbContext(typeof(UserDbContext))]
-partial class UserDbContextModelSnapshot : ModelSnapshot
+[DbContext(typeof(KokbokDbContext))]
+partial class KokbokDbContextModelSnapshot : ModelSnapshot
 {
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
