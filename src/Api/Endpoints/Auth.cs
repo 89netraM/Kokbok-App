@@ -50,12 +50,12 @@ public static class Auth
     }
 
     private static async Task<Results<Ok, ValidationProblem>> Register(
-        [FromServices] SignInManager<User> signInManager,
-        [FromServices] UserManager<User> userManager,
+        [FromServices] SignInManager<Models.User> signInManager,
+        [FromServices] UserManager<Models.User> userManager,
         [FromBody] RegisterRequest request
     )
     {
-        var user = new User
+        var user = new Models.User
         {
             UserName = request.Username,
             Name = request.Name,
@@ -80,8 +80,8 @@ public static class Auth
             );
 
     private static async Task<RedirectHttpResult> Callback(
-        [FromServices] SignInManager<User> signInManager,
-        [FromServices] UserManager<User> userManager
+        [FromServices] SignInManager<Models.User> signInManager,
+        [FromServices] UserManager<Models.User> userManager
     )
     {
         var info = await signInManager.GetExternalLoginInfoAsync();
@@ -97,7 +97,7 @@ public static class Auth
         );
         if (!result.Succeeded)
         {
-            var user = new User
+            var user = new Models.User
             {
                 Name = info.Principal.FindFirstValue(ClaimTypes.Name),
                 UserName = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier),

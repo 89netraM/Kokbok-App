@@ -1,6 +1,7 @@
+using System;
 using Kokbok.Api.Database;
 using Kokbok.Api.Endpoints;
-using Kokbok.Api.Models;
+using Kokbok.Api.Services;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,7 @@ builder
     )
     .AddMigrationsService();
 
-builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<KokbokDbContext>();
+builder.Services.AddIdentityApiEndpoints<Kokbok.Api.Models.User>().AddEntityFrameworkStores<KokbokDbContext>();
 
 builder.Services.AddAuthentication().AddFacebook().AddGoogle().AddMicrosoftAccount();
 builder.Services.AddOptions<FacebookOptions>(FacebookDefaults.AuthenticationScheme).BindConfiguration("Auth:Facebook");
@@ -30,12 +32,17 @@ builder
     .BindConfiguration("Auth:Microsoft");
 builder.Services.AddAuthorization();
 
+builder.Services.TryAddSingleton(TimeProvider.System);
+builder.Services.AddTransient<RecipeService>();
+
 using var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOpenApi();
+var api = app.MapGroup("api");
+api.MapOpenApi();
+api.MapRecipeEndpoints();
 
 app.MapAuthEndpoints();
 

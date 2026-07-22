@@ -3,6 +3,7 @@ using Kokbok.Api.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kokbok.Api.Database;
 
@@ -24,6 +25,8 @@ public sealed class KokbokDbContext(DbContextOptions<KokbokDbContext> options) :
         var recipeBuilder = builder.Entity<Recipe>();
         recipeBuilder.HasKey(r => r.Id);
         recipeBuilder.HasOne(r => r.Source);
+        recipeBuilder.Property(r => r.CreatedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+        recipeBuilder.Property(r => r.DeletedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
         var sourceBuilder = builder.Entity<Source>();
         sourceBuilder.Property<Guid>("Id");
         sourceBuilder.HasKey("Id");
@@ -63,6 +66,8 @@ public sealed class KokbokDbContext(DbContextOptions<KokbokDbContext> options) :
 
         var assetBuilder = builder.Entity<Asset>();
         assetBuilder.HasKey(a => a.Id);
+        assetBuilder.Property(a => a.UploadedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+        assetBuilder.Property(a => a.RemovedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
     }
 }
 
