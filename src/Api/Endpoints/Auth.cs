@@ -24,6 +24,7 @@ public static class Auth
 
             group.MapPost("login", Login);
             group.MapPost("register", Register);
+            group.MapGet("about", GetUser).RequireAuthorization();
 
             group.MapGet("facebook/signin", ExternalChallenge(FacebookDefaults.AuthenticationScheme));
             group.MapGet("google/signin", ExternalChallenge(GoogleDefaults.AuthenticationScheme));
@@ -70,6 +71,13 @@ public static class Auth
         await signInManager.SignInAsync(user, isPersistent: true);
         return TypedResults.Ok();
     }
+
+    private static async Task<Ok<User>> GetUser(
+        [FromServices] UserManager<Models.User> userManager,
+        HttpContext httpContext
+    ) =>
+        // Endpoint requires authenticated users
+        TypedResults.Ok(User.FromModel((await userManager.GetUserAsync(httpContext.User))!));
 
     private static Func<SignInManager<Models.User>, ChallengeHttpResult> ExternalChallenge(
         string authenticationScheme

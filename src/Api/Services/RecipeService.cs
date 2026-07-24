@@ -41,6 +41,7 @@ public sealed class RecipeService(KokbokDbContext dbContext, TimeProvider timePr
             .Recipes.AsNoTracking()
             .Include(r => r.Image)
             .Include(r => r.Owner)
+            .Include(r => r.Source)
             .Include(r => r.Ingredients.OrderBy(s => s.Order))
                 .ThenInclude(s => s.Values.OrderBy(i => i.Order))
                     .ThenInclude(i => i.Amount)

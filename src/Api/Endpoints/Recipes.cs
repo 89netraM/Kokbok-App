@@ -139,6 +139,7 @@ public sealed class Recipe : LightRecipe
             Description = recipe.Description,
             ImageId = recipe.Image?.Id,
             Owner = User.FromModel(recipe.Owner),
+            Source = Source.FromModel(recipe.Source),
             Instructions =
             [
                 .. recipe.Instructions.Select(s => new Section<Instruction>
@@ -173,6 +174,8 @@ public sealed class Recipe : LightRecipe
                 }),
             ],
         };
+
+    public required Source? Source { get; init; }
 
     public required Section<Instruction>[] Instructions { get; init; }
     public required Section<Ingredient>[] Ingredients { get; init; }
@@ -239,6 +242,32 @@ public sealed class Instruction
 {
     public string? Name { get; init; }
     public required string Text { get; init; }
+}
+
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(Plaintext), "plaintext")]
+[JsonDerivedType(typeof(Pdf), "pdf")]
+[JsonDerivedType(typeof(Images), "images")]
+[JsonDerivedType(typeof(Link), "link")]
+public closed record Source()
+{
+    public static Source? FromModel(Models.Source source) =>
+        source switch
+        {
+            Models.Plaintext { Asset.Id: var assetId } => new Plaintext(assetId),
+            Models.Pdf { Asset.Id: var assetId } => new Pdf(assetId),
+            Models.Images { Assets: var assets } => new Images([.. assets.Select(a => a.Id)]),
+            Models.Link { Url: var url } => new Link(url),
+            null => null,
+        };
+
+    public record Plaintext(Guid AssetId) : Source();
+
+    public record Pdf(Guid AssetId) : Source();
+
+    public record Images(Guid[] AssetIds) : Source();
+
+    public record Link(Uri Url) : Source();
 }
 
 public sealed class RecipeCreationJob

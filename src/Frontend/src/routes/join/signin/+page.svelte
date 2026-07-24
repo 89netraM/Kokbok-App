@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { goto, invalidate } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { tick } from "svelte";
 
@@ -24,6 +24,7 @@
         }),
       });
       if (response.status === 200) {
+        await invalidate("/auth/about");
         await goto(resolve("/"));
         return;
       }

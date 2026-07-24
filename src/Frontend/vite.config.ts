@@ -8,6 +8,9 @@ export default defineConfig({
       "/auth": {
         target: "https://localhost:5164",
       },
+      "/api": {
+        target: "https://localhost:5164",
+      },
     },
   },
   plugins: [

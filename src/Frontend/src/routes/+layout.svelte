@@ -1,11 +1,17 @@
 <script lang="ts">
-  import favicon from "$lib/assets/favicon.svg";
+  import { resolve } from "$app/paths";
+  import type { LayoutProps } from "./$types";
 
-  let { children } = $props();
+  let { data, children }: LayoutProps = $props();
 </script>
 
-<svelte:head>
-  <link rel="icon" href={favicon} />
-</svelte:head>
+<nav>
+  <h1><a href={resolve("/")}>Kokbok</a></h1>
+  {#if data.user == null}
+    <p><a href={resolve("/join")}>Gå med</a></p>
+  {:else}
+    <p>{data.user.name}</p>
+  {/if}
+</nav>
 
 {@render children()}
