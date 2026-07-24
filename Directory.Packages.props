@@ -10,6 +10,8 @@
     </GlobalPackageReference>
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.6" />
     <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.13.0-beta1" />
+    <PackageVersion Include="JsonLdRecipeParser" Version="0.0.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Facebook" Version="11.0.0-preview.6.26359.118" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="11.0.0-preview.6.26359.118" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="11.0.0-preview.6.26359.118" />

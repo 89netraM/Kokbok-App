@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http.Headers;
 using Kokbok.Api.Database;
 using Kokbok.Api.Endpoints;
 using Kokbok.Api.Services;
@@ -36,6 +37,14 @@ builder.Services.TryAddSingleton(TimeProvider.System);
 builder.Services.AddTransient<RecipeService>();
 
 builder.Services.AddAssetServiceOptions().AddTransient<AssetService>();
+
+builder
+    .Services.AddHostedService<RecipeCreationJobBackgroundService>()
+    .AddTransient<RecipeCreationJobService>()
+    .AddHttpClient<LinkScraperService>(client =>
+    {
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Kokbok/1.0.0 (+https://kokbok.app/)");
+    });
 
 using var app = builder.Build();
 

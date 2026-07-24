@@ -8,6 +8,18 @@
         "resolved": "1.3.0",
         "contentHash": "jzzLpmz7F6LyBh5FTZy8/4dEYVcAG9VjBPKryZ82LIoUuupcBkCSXzaeS/4oYcp/rBC8yVLcDstJ8CIv9n2IFw=="
       },
+      "HtmlAgilityPack": {
+        "type": "Direct",
+        "requested": "[1.13.0-beta1, )",
+        "resolved": "1.13.0-beta1",
+        "contentHash": "L4Z5ec01fS6njAambe+ZZz+UcX7v/37BV9/Rcd/as3ThC91/8zrMXSbleGLoV28ouPWyOZ+PlqREPrKzlyu/Ag=="
+      },
+      "JsonLdRecipeParser": {
+        "type": "Direct",
+        "requested": "[0.0.4, )",
+        "resolved": "0.0.4",
+        "contentHash": "OOaLSs9K8+FhedkdOuBQ543eoT7yn2JUoyJezNsI8dSYPT0q+OOOAz6V5kZ+Ygf99jVr63bMXvq3+oTd0r4kLA=="
+      },
       "Microsoft.AspNetCore.Authentication.Facebook": {
         "type": "Direct",
         "requested": "[11.0.0-preview.6.26359.118, )",

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using Kokbok.Api.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,8 @@ public sealed class KokbokDbContext(DbContextOptions<KokbokDbContext> options) :
     public required DbSet<Asset> Assets { get; init; }
 
     public required DbSet<Recipe> Recipes { get; init; }
+
+    public required DbSet<RecipeCreationJob> RecipeCreationJobs { get; init; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -68,6 +71,18 @@ public sealed class KokbokDbContext(DbContextOptions<KokbokDbContext> options) :
         assetBuilder.HasKey(a => a.Id);
         assetBuilder.Property(a => a.UploadedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
         assetBuilder.Property(a => a.RemovedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+
+        var recipeCreationJobBuilder = builder.Entity<RecipeCreationJob>();
+        recipeCreationJobBuilder.HasOne(j => j.Recipe).WithMany().HasForeignKey(j => j.RecipeId).IsConstrained(false);
+        recipeCreationJobBuilder.Property(j => j.ScheduledAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+        recipeCreationJobBuilder.Property(j => j.StartedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+        recipeCreationJobBuilder.Property(j => j.CompletedAt).HasConversion<DateTimeOffsetToBinaryConverter>();
+        recipeCreationJobBuilder
+            .Property(j => j.Task)
+            .HasConversion(
+                v => JsonSerializer.Serialize<RecipeCreationTask>(v),
+                v => JsonSerializer.Deserialize<RecipeCreationTask>(v)
+            );
     }
 }
 
@@ -78,6 +93,11 @@ public class KokbokDbContextFactory : IDesignTimeDbContextFactory<KokbokDbContex
         var optionsBuilder = new DbContextOptionsBuilder<KokbokDbContext>();
         optionsBuilder.UseSqlite("Data Source=kokbok.db");
 
-        return new KokbokDbContext(optionsBuilder.Options) { Assets = null!, Recipes = null! };
+        return new KokbokDbContext(optionsBuilder.Options)
+        {
+            Assets = null!,
+            Recipes = null!,
+            RecipeCreationJobs = null!,
+        };
     }
 }

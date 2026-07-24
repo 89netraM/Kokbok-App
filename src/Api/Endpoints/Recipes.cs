@@ -27,6 +27,10 @@ public static class Recipes
             group.MapPut("", CreateRecipe).RequireAuthorization();
             group.MapGet("{id}", GetRecipe);
 
+            var jobs = group.MapGroup("jobs").RequireAuthorization();
+            jobs.MapPut("", CreateRecipeJob);
+            jobs.MapGet("{id}", GetRecipeJob).WithName(nameof(GetRecipeJob));
+
             return group;
         }
     }
@@ -58,6 +62,38 @@ public static class Recipes
         var user = (await userManager.GetUserAsync(httpContext.User))!;
         var recipe = await recipeService.CreateRecipe(user, request, cancellationToken);
         return TypedResults.Ok(LightRecipe.FromModel(recipe));
+    }
+
+    private static async Task<AcceptedAtRoute<RecipeCreationJob>> CreateRecipeJob(
+        [FromServices] UserManager<Models.User> userManager,
+        [FromServices] RecipeCreationJobService recipeCreationJobService,
+        HttpContext httpContext,
+        [FromBody] CreateRecipeFromLinkRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        // Endpoint requires authenticated users
+        var user = (await userManager.GetUserAsync(httpContext.User))!;
+        var job = await recipeCreationJobService.StartCreationFromLink(user, request.Link, cancellationToken);
+        return TypedResults.AcceptedAtRoute(
+            RecipeCreationJob.FromModel(job),
+            nameof(GetRecipeJob),
+            new RouteValueDictionary { ["id"] = job.Id }
+        );
+    }
+
+    private static async Task<Results<Ok<RecipeCreationJob>, NotFound>> GetRecipeJob(
+        [FromServices] UserManager<Models.User> userManager,
+        [FromServices] RecipeCreationJobService recipeCreationJobService,
+        HttpContext httpContext,
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        // Endpoint requires authenticated users
+        var user = (await userManager.GetUserAsync(httpContext.User))!;
+        var job = await recipeCreationJobService.GetRecipeJob(user, id, cancellationToken);
+        return job is null ? TypedResults.NotFound() : TypedResults.Ok(RecipeCreationJob.FromModel(job));
     }
 
     private static async Task<Results<Ok<Recipe>, NotFound>> GetRecipe(
@@ -167,6 +203,11 @@ public sealed class CreateRecipeRequest
     public Section<Instruction>[] Instructions { get; init; } = [];
 }
 
+public sealed class CreateRecipeFromLinkRequest
+{
+    public required Uri Link { get; init; }
+}
+
 public sealed class Section<T>
 {
     public string? Name { get; init; }
@@ -198,4 +239,23 @@ public sealed class Instruction
 {
     public string? Name { get; init; }
     public required string Text { get; init; }
+}
+
+public sealed class RecipeCreationJob
+{
+    public static RecipeCreationJob FromModel(Models.RecipeCreationJob job) =>
+        new()
+        {
+            Id = job.Id,
+            RecipeId = job.Recipe?.Id,
+            ScheduledAt = job.ScheduledAt,
+            StartedAt = job.StartedAt,
+            CompletedAt = job.CompletedAt,
+        };
+
+    public required Guid Id { get; init; }
+    public required Guid? RecipeId { get; init; }
+    public required DateTimeOffset ScheduledAt { get; init; }
+    public required DateTimeOffset? StartedAt { get; set; }
+    public required DateTimeOffset? CompletedAt { get; set; }
 }
