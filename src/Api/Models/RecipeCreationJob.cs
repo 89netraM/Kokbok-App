@@ -12,4 +12,5 @@ public sealed class RecipeCreationJob
     public DateTimeOffset? StartedAt { get; set; }
     public DateTimeOffset? CompletedAt { get; set; }
     public Recipe? Recipe { get; set; }
+    public string? ErrorMessage { get; set; }
 }

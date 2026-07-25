@@ -53,7 +53,7 @@ public sealed class RecipeCreationJobBackgroundService(
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed when working on job {JobId}.", job.Id);
-            await recipeCreationJobService.CompleteRecipeJob(job, null, cancellationToken);
+            await recipeCreationJobService.CompleteRecipeJob(job, ex, cancellationToken);
         }
     }
 

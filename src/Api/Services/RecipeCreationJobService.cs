@@ -30,6 +30,7 @@ public sealed class RecipeCreationJobService(KokbokDbContext dbContext, TimeProv
             .RecipeCreationJobs.AsNoTracking()
             .Where(j => j.Owner == user && j.Id == id)
             .Include(j => j.Owner)
+            .Include(j => j.Recipe)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<RecipeCreationJob?> GetNextRecipeJob(CancellationToken cancellationToken) =>
@@ -45,7 +46,7 @@ public sealed class RecipeCreationJobService(KokbokDbContext dbContext, TimeProv
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task CompleteRecipeJob(RecipeCreationJob job, Recipe? recipe, CancellationToken cancellationToken)
+    public async Task CompleteRecipeJob(RecipeCreationJob job, Recipe recipe, CancellationToken cancellationToken)
     {
         job.CompletedAt = timeProvider.GetUtcNow();
         job.Recipe = recipe;
@@ -53,6 +54,13 @@ public sealed class RecipeCreationJobService(KokbokDbContext dbContext, TimeProv
         {
             dbContext.Recipes.Add(recipe);
         }
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task CompleteRecipeJob(RecipeCreationJob job, Exception exception, CancellationToken cancellationToken)
+    {
+        job.CompletedAt = timeProvider.GetUtcNow();
+        job.ErrorMessage = exception.Message + "\n" + exception.StackTrace;
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

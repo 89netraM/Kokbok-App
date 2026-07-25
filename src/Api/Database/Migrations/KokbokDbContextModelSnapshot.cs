@@ -15,7 +15,7 @@ partial class KokbokDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20260724042549_RecipeCreationJobs";
+    public override string LastMigrationId => "20260725160240_JobErrorMessages";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -189,6 +189,9 @@ partial class KokbokDbContextModelSnapshot : ModelSnapshot
 
                 b.Property<long?>("CompletedAt")
                     .HasColumnType("INTEGER");
+
+                b.Property<string>("ErrorMessage")
+                    .HasColumnType("TEXT");
 
                 b.Property<string>("OwnerId")
                     .HasColumnType("TEXT");

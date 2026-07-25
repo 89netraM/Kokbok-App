@@ -9,6 +9,10 @@
   <title>Kokbok</title>
 </svelte:head>
 
+<aside>
+  <a class="button" href={resolve("/create")}>+ Skapa</a>
+</aside>
+
 <article>
   {#each data.recipes as recipe (recipe.id)}
     <a href={resolve(`/recipes/[id]`, { id: recipe.id })}>
@@ -27,6 +31,15 @@
 </article>
 
 <style>
+  aside {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding: 0.5rem 2rem;
+    background-color: #c48574;
+  }
+
   article {
     display: grid;
     grid-template-columns: 1fr;
@@ -71,6 +84,11 @@
   }
 
   @media screen and (min-width: 640px) {
+    aside {
+      padding-block: 1rem;
+      padding-inline: calc(max(0px, 100% - 900px) / 2 + 4rem);
+    }
+
     article {
       grid-template-columns: 1fr 1fr 1fr;
       max-width: 900px;

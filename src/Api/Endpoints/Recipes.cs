@@ -280,6 +280,7 @@ public sealed class RecipeCreationJob
             ScheduledAt = job.ScheduledAt,
             StartedAt = job.StartedAt,
             CompletedAt = job.CompletedAt,
+            ErrorMessage = job.ErrorMessage,
         };
 
     public required Guid Id { get; init; }
@@ -287,4 +288,5 @@ public sealed class RecipeCreationJob
     public required DateTimeOffset ScheduledAt { get; init; }
     public required DateTimeOffset? StartedAt { get; set; }
     public required DateTimeOffset? CompletedAt { get; set; }
+    public required string? ErrorMessage { get; set; }
 }
