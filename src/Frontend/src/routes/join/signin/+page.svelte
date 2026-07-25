@@ -51,7 +51,7 @@
     </label>
   </p>
   <p>
-    <label>
+    <label class="button">
       {#if loading}
         <progress></progress>
       {:else}
@@ -66,7 +66,21 @@
 
 <p>Logga in med</p>
 <p>
-  <a href="/auth/facebook/signin">Facebook</a>
-  <a href="/auth/google/signin">Google</a>
-  <a href="/auth/microsoft/signin">Microsoft</a>
+  <a class="button" href="/auth/facebook/signin">Facebook</a>
+  <a class="button" href="/auth/google/signin">Google</a>
+  <a class="button" href="/auth/microsoft/signin">Microsoft</a>
 </p>
+
+<style>
+  p:has(> label.button:only-child) {
+    display: flex;
+    justify-content: end;
+
+    label {
+      text-align: center;
+      @media screen and (max-width: 640px) {
+        width: 100%;
+      }
+    }
+  }
+</style>
