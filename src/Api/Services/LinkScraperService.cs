@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Runtime.InteropServices.Marshalling;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,10 +12,18 @@ using HtmlAgilityPack;
 using JsonLdRecipeParser;
 using Kokbok.Api.Models;
 using Kokbok.Api.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 
 namespace Kokbok.Api.Services;
 
-public sealed class LinkScraperService(HttpClient httpClient, AssetService assetService, TimeProvider timeProvider)
+public sealed class LinkScraperService(
+    ILogger<LinkScraperService> logger,
+    HttpClient httpClient,
+    PlaywrightService playwrightService,
+    AssetService assetService,
+    TimeProvider timeProvider
+)
 {
     public async Task<Models.Recipe> CreateRecipeFromLink(
         Guid id,
@@ -24,11 +32,7 @@ public sealed class LinkScraperService(HttpClient httpClient, AssetService asset
         CancellationToken cancellationToken
     )
     {
-        var html = await httpClient.GetStringAsync(url, cancellationToken);
-        var document = new HtmlDocument();
-        document.LoadHtml(html);
-        var node = document.DocumentNode.SelectSingleNode("//script[@type=\"application/ld+json\"]/text()");
-        var json = (node as HtmlTextNode)?.Text ?? throw new Exception("No JSON-LD document found.");
+        var json = await GetJsonLd(url, cancellationToken) ?? throw new Exception("No JSON-LD element.");
         var jsonLdRecipe = JsonLdRecipeParser.Recipe.Parse(
             JsonSerializer.Deserialize<JsonDocument>(json) ?? throw new Exception("Null JSON-LD document.")
         );
@@ -101,22 +105,68 @@ public sealed class LinkScraperService(HttpClient httpClient, AssetService asset
 
         if (jsonLdRecipe.Images.Length > 0)
         {
-            recipe.Image = await DownloadImage(user, recipe.Name, jsonLdRecipe.Images, cancellationToken);
+            recipe.Image = await DownloadImage(user, recipe.Name, url, jsonLdRecipe.Images, cancellationToken);
         }
 
         return recipe;
     }
 
+    private async Task<string?> GetJsonLd(Uri url, CancellationToken cancellationToken) =>
+        await GetStaticJsonLd(url, cancellationToken) ?? await GetClientSideJsonLd(url, cancellationToken);
+
+    private async Task<string?> GetStaticJsonLd(Uri url, CancellationToken cancellationToken)
+    {
+        logger.LogDebug("Reading JSON-LD from static source {URL}", url);
+        var html = await httpClient.GetStringAsync(url, cancellationToken);
+        var document = new HtmlDocument();
+        document.LoadHtml(html);
+        var node = document.DocumentNode.SelectSingleNode("//script[@type=\"application/ld+json\"]/text()");
+        return (node as HtmlTextNode)?.Text;
+    }
+
+    private async Task<string?> GetClientSideJsonLd(Uri url, CancellationToken cancellationToken)
+    {
+        logger.LogDebug("Reading JSON-LD from client side source {URL}", url);
+        await using var page = await playwrightService.NewPageAsync();
+        await page.GotoAsync(url.ToString());
+        await using var element = await page.WaitForSelectorAsync(
+            "script[type=\"application/ld+json\"]",
+            new() { State = WaitForSelectorState.Attached }
+        );
+        if (element is null)
+        {
+            return null;
+        }
+        return await element.InnerTextAsync();
+    }
+
     private async Task<Asset?> DownloadImage(
         User user,
         string recipeName,
+        Uri url,
         IEnumerable<Uri> imageUris,
         CancellationToken cancellationToken
     )
     {
         using var response = await imageUris
             .ToAsyncEnumerable()
-            .Select((iu, ct) => new ValueTask<HttpResponseMessage>(httpClient.GetAsync(iu, ct)))
+            .Select(
+                async (iu, ct) =>
+                {
+                    if (!iu.IsAbsoluteUri)
+                    {
+                        if (iu.OriginalString.StartsWith("//"))
+                        {
+                            iu = new("https:" + iu.OriginalString);
+                        }
+                        else
+                        {
+                            iu = new($"{url.Scheme}://{url.Host}{iu.OriginalString}");
+                        }
+                    }
+                    return await httpClient.GetAsync(iu, ct);
+                }
+            )
             .Where(r => r.IsSuccessStatusCode)
             // Assume the longest image in byte count is the largest/best quality image
             .MaxByAsync(r => r.Content.Headers.ContentLength ?? 0L, cancellationToken: cancellationToken);

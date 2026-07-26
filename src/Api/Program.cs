@@ -38,6 +38,8 @@ builder.Services.AddTransient<RecipeService>();
 
 builder.Services.AddAssetServiceOptions().AddTransient<AssetService>();
 
+builder.Services.AddMemoryCache().AddTransient<PlaywrightService>();
+
 builder
     .Services.AddHostedService<RecipeCreationJobBackgroundService>()
     .AddTransient<RecipeCreationJobService>()
