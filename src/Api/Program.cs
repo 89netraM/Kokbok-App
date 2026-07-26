@@ -1,5 +1,5 @@
 using System;
-using System.Net.Http.Headers;
+using Kokbok;
 using Kokbok.Api.Database;
 using Kokbok.Api.Endpoints;
 using Kokbok.Api.Services;
@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.ConfigureOpenTelemetry();
 
 builder.Services.AddOpenApi();
 
