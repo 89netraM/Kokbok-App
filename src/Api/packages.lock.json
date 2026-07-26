@@ -16,9 +16,9 @@
       },
       "JsonLdRecipeParser": {
         "type": "Direct",
-        "requested": "[0.0.4, )",
-        "resolved": "0.0.4",
-        "contentHash": "OOaLSs9K8+FhedkdOuBQ543eoT7yn2JUoyJezNsI8dSYPT0q+OOOAz6V5kZ+Ygf99jVr63bMXvq3+oTd0r4kLA=="
+        "requested": "[0.0.5, )",
+        "resolved": "0.0.5",
+        "contentHash": "zw9hLz/NgViCvLm0zI/ZAd1IJXHkiBi36GHDzAvXaa1ijyZemZUFfd83qvH0Oo9ctDDSo/NPcC/LnEcC4VPZ7w=="
       },
       "Microsoft.AspNetCore.Authentication.Facebook": {
         "type": "Direct",
