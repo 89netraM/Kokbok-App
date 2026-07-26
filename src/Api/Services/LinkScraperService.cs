@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Net.NetworkInformation;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -26,6 +26,27 @@ public sealed class LinkScraperService(
 )
 {
     public async Task<Models.Recipe> CreateRecipeFromLink(
+        Guid id,
+        Uri url,
+        User user,
+        CancellationToken cancellationToken
+    )
+    {
+        var exceptions = new List<Exception>();
+
+        try
+        {
+            return await CreateRecipeFromJsonLd(id, url, user, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        throw new AggregateException("Failed scraping recipe.", exceptions);
+    }
+
+    private async Task<Models.Recipe> CreateRecipeFromJsonLd(
         Guid id,
         Uri url,
         User user,
@@ -111,33 +132,50 @@ public sealed class LinkScraperService(
         return recipe;
     }
 
-    private async Task<string?> GetJsonLd(Uri url, CancellationToken cancellationToken) =>
+    private async Task<JsonNode?> GetJsonLd(Uri url, CancellationToken cancellationToken) =>
         await GetStaticJsonLd(url, cancellationToken) ?? await GetClientSideJsonLd(url, cancellationToken);
 
-    private async Task<string?> GetStaticJsonLd(Uri url, CancellationToken cancellationToken)
+    private async Task<JsonNode?> GetStaticJsonLd(Uri url, CancellationToken cancellationToken)
     {
         logger.LogDebug("Reading JSON-LD from static source {URL}", url);
         var html = await httpClient.GetStringAsync(url, cancellationToken);
         var document = new HtmlDocument();
         document.LoadHtml(html);
-        var node = document.DocumentNode.SelectSingleNode("//script[@type=\"application/ld+json\"]/text()");
-        return (node as HtmlTextNode)?.Text;
+        var nodes = document
+            .DocumentNode.SelectNodes("//script[@type=\"application/ld+json\"]/text()")
+            ?.OfType<HtmlTextNode>()
+            .SelectMany(n =>
+                JsonNode.Parse(n.Text) switch
+                {
+                    JsonObject obj => [obj.DeepClone()],
+                    JsonArray array => array.DeepClone().AsArray(),
+                    _ => [],
+                }
+            )
+            .OfType<JsonNode>()
+            .ToArray();
+        return nodes?.Length is > 0 ? nodes.ToJsonArray() : null;
     }
 
-    private async Task<string?> GetClientSideJsonLd(Uri url, CancellationToken cancellationToken)
+    private async Task<JsonNode?> GetClientSideJsonLd(Uri url, CancellationToken cancellationToken)
     {
         logger.LogDebug("Reading JSON-LD from client side source {URL}", url);
         await using var page = await playwrightService.NewPageAsync();
         await page.GotoAsync(url.ToString());
-        await using var element = await page.WaitForSelectorAsync(
-            "script[type=\"application/ld+json\"]",
-            new() { State = WaitForSelectorState.Attached }
-        );
-        if (element is null)
-        {
-            return null;
-        }
-        return await element.InnerTextAsync();
+        var locator = page.Locator("script[type=\"application/ld+json\"]");
+        await locator.First.WaitForAsync(new() { State = WaitForSelectorState.Attached });
+        var nodes = (await locator.AllTextContentsAsync())
+            .SelectMany(t =>
+                JsonNode.Parse(t) switch
+                {
+                    JsonObject obj => [obj],
+                    JsonArray array => array,
+                    _ => [],
+                }
+            )
+            .OfType<JsonNode>()
+            .ToArray();
+        return nodes.Length > 0 ? nodes.ToJsonArray() : null;
     }
 
     private async Task<Asset?> DownloadImage(
