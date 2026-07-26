@@ -9,9 +9,7 @@
 <nav>
   <h1><a href={resolve("/")}>Kokbok</a></h1>
   <p id="account">
-    {#if data.user == null}
-      <a href={resolve("/join")}>Gå med</a>
-    {:else}
+    {#if data.user != null}
       {data.user.name}
     {/if}
   </p>

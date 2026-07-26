@@ -10,7 +10,11 @@
 </svelte:head>
 
 <aside>
-  <a class="button" href={resolve("/create")}>+ Skapa</a>
+  {#if data.user == null}
+    <a class="button" href={resolve("/join")}>Gå med</a>
+  {:else}
+    <a class="button" href={resolve("/create")}>+ Skapa</a>
+  {/if}
 </aside>
 
 <article>
