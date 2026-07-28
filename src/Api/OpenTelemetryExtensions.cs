@@ -28,8 +28,9 @@ public static class OpenTelemetryExtensions
             {
                 tracing
                     .AddAspNetCoreInstrumentation()
-                    .AddSource(builder.Environment.ApplicationName)
-                    .AddHttpClientInstrumentation();
+                    .AddSource("Kokbok")
+                    .AddHttpClientInstrumentation()
+                    .AddSource("Experimental.Microsoft.Extensions.AI");
             });
 
         builder.AddOpenTelemetryExporters();

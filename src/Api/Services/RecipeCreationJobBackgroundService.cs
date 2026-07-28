@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,8 @@ public sealed class RecipeCreationJobBackgroundService(
     IServiceProvider serviceProvider
 ) : BackgroundService
 {
+    private static readonly ActivitySource activitySource = new("Kokbok");
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
@@ -23,6 +26,8 @@ public sealed class RecipeCreationJobBackgroundService(
                 var job = await recipeCreationJobService.GetNextRecipeJob(stoppingToken);
                 if (job is not null)
                 {
+                    using var activity = activitySource.StartActivity("RecipeCreationJob", ActivityKind.Internal);
+                    activity?.SetTag("JobId", job.Id);
                     await Work(scope.ServiceProvider, recipeCreationJobService, job, stoppingToken);
                 }
             }

@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using OllamaSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,10 +48,35 @@ builder.Services.AddMemoryCache().AddTransient<PlaywrightService>();
 builder
     .Services.AddHostedService<RecipeCreationJobBackgroundService>()
     .AddTransient<RecipeCreationJobService>()
-    .AddHttpClient<LinkScraperService>(client =>
-    {
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("Kokbok/1.0.0 (+https://kokbok.app/)");
-    });
+    .AddTransient<LinkScraperService>()
+    .AddHttpClient(
+        nameof(LinkScraperService),
+        client =>
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Kokbok/1.0.0 (+https://kokbok.app/)");
+        }
+    )
+    .AddAsKeyed();
+
+builder
+    .Services.AddOllamaOptions()
+    .AddHttpClient<IChatClient, IChatClient>(
+        (client, sp) =>
+        {
+            var options = sp.GetRequiredService<IOptions<OllamaOptions>>().Value;
+            client.BaseAddress = options.BaseAddress;
+            if (options.Authorization is not null)
+            {
+                client.DefaultRequestHeaders.Add("Authorization", options.Authorization);
+            }
+            client.Timeout = TimeSpan.FromMinutes(5);
+            return ChatClientBuilderChatClientExtensions
+                .AsBuilder(new OllamaApiClient(client, options.Model))
+                .UseLogging()
+                .UseOpenTelemetry()
+                .Build(sp);
+        }
+    );
 
 using var app = builder.Build();
 

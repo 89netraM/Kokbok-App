@@ -99,6 +99,16 @@
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0"
         }
       },
+      "OllamaSharp": {
+        "type": "Direct",
+        "requested": "[5.4.30, )",
+        "resolved": "5.4.30",
+        "contentHash": "r/dtO3cm/D+OCB1A3dPcA//YnC9Cak3SSSK1dxfvG9RbEKjMezf3l04Ag1j8tiDul/oGn9nb8+fIwlrg0KOkww==",
+        "dependencies": {
+          "Microsoft.Extensions.AI": "10.8.0",
+          "Microsoft.Extensions.AI.Abstractions": "10.8.0"
+        }
+      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "Direct",
         "requested": "[1.17.0, )",
@@ -264,6 +274,20 @@
           "SQLitePCLRaw.core": "3.0.3"
         }
       },
+      "Microsoft.Extensions.AI": {
+        "type": "Transitive",
+        "resolved": "10.8.0",
+        "contentHash": "QfthL8e2X/Z6jRs4YyVS2+HTApJvhz725l35HYZ9cfwlEuQnpzY89NJoGNmpuNZn4LIvvQOQeZIbu3jggBXgUg==",
+        "dependencies": {
+          "Microsoft.Extensions.AI.Abstractions": "10.8.0",
+          "System.Numerics.Tensors": "10.0.10"
+        }
+      },
+      "Microsoft.Extensions.AI.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.8.0",
+        "contentHash": "1tJZ5sAYrEq1YjNg8GrZSL1tVodsWRfrgybGsZo5DQsWQgLZ+dSR5uFowIS6vb/9zxGBPl7xpYq53QMjNObO9w=="
+      },
       "Microsoft.Extensions.DependencyModel": {
         "type": "Transitive",
         "resolved": "11.0.0-preview.6.26359.118",
@@ -387,6 +411,11 @@
           "System.Composition.Hosting": "9.0.0",
           "System.Composition.Runtime": "9.0.0"
         }
+      },
+      "System.Numerics.Tensors": {
+        "type": "Transitive",
+        "resolved": "10.0.10",
+        "contentHash": "9Ildb4Y9maDztB0ZRGxsNShbpCQ2Tjv2dr4IjskBxpTGhH7aIz1+oC+Hl833ASs/htWwsH6myNe+sRpeyCzeMQ=="
       }
     }
   }
