@@ -78,6 +78,8 @@ builder
         }
     );
 
+builder.Services.AddTransient<AiExtractionService>();
+
 using var app = builder.Build();
 
 app.UseAuthentication();
