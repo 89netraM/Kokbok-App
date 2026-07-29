@@ -6,7 +6,7 @@
 </script>
 
 <div class="recipe">
-  {#if data.recipe.description != null}
+  {#if data.recipe.description != null && data.recipe.description.length > 0}
     <p class="description">{data.recipe.description}</p>
   {/if}
 
@@ -25,6 +25,7 @@
                   {ingredient.amount.value.value}
                 {:else if AmountValue.isRangeValue(ingredient.amount.value)}
                   <span class="from">{ingredient.amount.value.from}</span>
+                  &ndash;
                   <span class="to">{ingredient.amount.value.to}</span>
                 {/if}
               </span>
@@ -69,9 +70,14 @@
       "instructions";
     padding-inline: 1rem;
     padding-block-end: 4rem;
+    gap: 0 1rem;
 
     > p {
       grid-area: description;
+    }
+
+    :is(aside, article) > h2 {
+      margin-block-start: 0;
     }
 
     aside {
