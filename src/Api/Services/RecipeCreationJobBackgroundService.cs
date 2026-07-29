@@ -71,5 +71,7 @@ public sealed class RecipeCreationJobBackgroundService(
         {
             Models.RecipeCreationTask.Link(var url) => await sp.GetRequiredService<LinkScraperService>()
                 .CreateRecipeFromLink(job.RecipeId, url, job.Owner, cancellationToken),
+            Models.RecipeCreationTask.Images(var assets) => await sp.GetRequiredService<ImageReaderService>()
+                .CreateRecipeFromImages(job.RecipeId, assets, job.Owner, cancellationToken),
         };
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Kokbok.Api.Models;
 
@@ -16,7 +17,7 @@ public sealed class Pdf : Source
 
 public sealed class Images : Source
 {
-    public required Asset[] Assets { get; init; }
+    public required ICollection<Asset> Assets { get; init; }
 }
 
 public sealed class Link : Source

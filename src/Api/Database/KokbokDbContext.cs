@@ -43,6 +43,7 @@ public sealed class KokbokDbContext(DbContextOptions<KokbokDbContext> options) :
 
         var imagesBuilder = builder.Entity<Images>();
         imagesBuilder.HasMany(i => i.Assets).WithMany();
+        imagesBuilder.Navigation(i => i.Assets).AutoInclude();
 
         recipeBuilder.HasMany(r => r.Ingredients).WithOne();
         var ingredientSectionBuilder = builder.Entity<Section<Ingredient>>();

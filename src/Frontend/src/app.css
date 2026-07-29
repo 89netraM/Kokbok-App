@@ -71,7 +71,7 @@ body {
     border-color: #1ce1ce;
   }
 
-  input:is([type="submit"], [type="button"], [type="reset"]) {
+  input:is([type="submit"], [type="button"], [type="reset"], [type="file"]) {
     display: none;
   }
 }

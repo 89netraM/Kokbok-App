@@ -36,7 +36,17 @@
     padding-block-end: 4rem;
   }
 
-  /* TODO: Style ul for images */
+  ul {
+    list-style: none;
+
+    li {
+      width: 100%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
 
   @media screen and (min-width: 640px) {
     pre,

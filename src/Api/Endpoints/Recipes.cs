@@ -68,13 +68,25 @@ public static class Recipes
         [FromServices] UserManager<Models.User> userManager,
         [FromServices] RecipeCreationJobService recipeCreationJobService,
         HttpContext httpContext,
-        [FromBody] CreateRecipeFromLinkRequest request,
+        [FromBody] CreateRecipeFromRequest request,
         CancellationToken cancellationToken
     )
     {
         // Endpoint requires authenticated users
         var user = (await userManager.GetUserAsync(httpContext.User))!;
-        var job = await recipeCreationJobService.StartCreationFromLink(user, request.Link, cancellationToken);
+        var job = request switch
+        {
+            CreateRecipeFromRequest.Link(var link) => await recipeCreationJobService.StartCreationFromLink(
+                user,
+                link,
+                cancellationToken
+            ),
+            CreateRecipeFromRequest.Images(var images) => await recipeCreationJobService.StartCreationFromImages(
+                user,
+                images,
+                cancellationToken
+            ),
+        };
         return TypedResults.AcceptedAtRoute(
             RecipeCreationJob.FromModel(job),
             nameof(GetRecipeJob),
@@ -139,7 +151,7 @@ public sealed class Recipe : LightRecipe
             Description = recipe.Description,
             ImageId = recipe.Image?.Id,
             Owner = User.FromModel(recipe.Owner),
-            Source = Source.FromModel(recipe.Source),
+            Source = recipe.Source is null ? null : Source.FromModel(recipe.Source),
             Instructions =
             [
                 .. recipe.Instructions.Select(s => new Section<Instruction>
@@ -206,9 +218,14 @@ public sealed class CreateRecipeRequest
     public Section<Instruction>[] Instructions { get; init; } = [];
 }
 
-public sealed class CreateRecipeFromLinkRequest
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(Link), "link")]
+[JsonDerivedType(typeof(Images), "images")]
+public closed record CreateRecipeFromRequest
 {
-    public required Uri Link { get; init; }
+    public sealed record Link([property: JsonPropertyName("link")] Uri Url) : CreateRecipeFromRequest;
+
+    public sealed record Images([property: JsonPropertyName("images")] Guid[] Assets) : CreateRecipeFromRequest;
 }
 
 public sealed class Section<T>

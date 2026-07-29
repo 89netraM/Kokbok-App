@@ -25,6 +25,30 @@ public sealed class RecipeCreationJobService(KokbokDbContext dbContext, TimeProv
         return job;
     }
 
+    public async Task<Models.RecipeCreationJob> StartCreationFromImages(
+        User user,
+        Guid[] images,
+        CancellationToken cancellationToken
+    )
+    {
+        var assets = await dbContext.Assets.Where(a => images.Contains(a.Id)).ToArrayAsync(cancellationToken);
+        if (assets.Length != images.Length)
+        {
+            throw new Exception("Could not start job because all images did not exist.");
+        }
+        var job = new RecipeCreationJob
+        {
+            Id = Guid.NewGuid(),
+            RecipeId = Guid.NewGuid(),
+            Owner = user,
+            Task = new RecipeCreationTask.Images(images),
+            ScheduledAt = timeProvider.GetUtcNow(),
+        };
+        dbContext.RecipeCreationJobs.Add(job);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return job;
+    }
+
     public async Task<RecipeCreationJob?> GetRecipeJob(User user, Guid id, CancellationToken cancellationToken) =>
         await dbContext
             .RecipeCreationJobs.AsNoTracking()

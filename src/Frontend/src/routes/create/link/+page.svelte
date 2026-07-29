@@ -18,6 +18,7 @@
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          type: "link",
           link,
         }),
       });
@@ -43,7 +44,7 @@
     </label>
   </p>
   <p>
-    <label class="button">
+    <label class="button" tabindex="0">
       {#if loading}
         <progress></progress>
       {:else}

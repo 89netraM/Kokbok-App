@@ -87,6 +87,16 @@ public sealed class AssetService(
             )
         );
     }
+
+    public Stream GetStream(Asset asset) =>
+        new FileStream(
+            Path.Join(directory, asset.Id.ToString()),
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            bufferSize: 4096,
+            FileOptions.Asynchronous
+        );
 }
 
 public record AssetStream(string Filename, string ContentType, Stream FileStream);

@@ -69,7 +69,7 @@ builder
             {
                 client.DefaultRequestHeaders.Add("Authorization", options.Authorization);
             }
-            client.Timeout = TimeSpan.FromMinutes(5);
+            client.Timeout = TimeSpan.FromMinutes(15);
             return ChatClientBuilderChatClientExtensions
                 .AsBuilder(new OllamaApiClient(client, options.Model))
                 .UseLogging()
@@ -79,6 +79,8 @@ builder
     );
 
 builder.Services.AddTransient<AiExtractionService>();
+
+builder.Services.AddTransient<ImageReaderService>();
 
 using var app = builder.Build();
 
