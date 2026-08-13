@@ -559,3 +559,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Six Labors license file
+src/Api/sixlabors.lic
